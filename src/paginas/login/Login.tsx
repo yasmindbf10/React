@@ -5,10 +5,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import useLocalStorage from 'react-use-localstorage';
 import { login } from '../services/Service';
 import UserLogin from '../../componentes/estaticos/models/UserLogin';
+import { useDispatch } from 'react-redux';
+import { addToken } from '../../store/tokens/actions';
+import{toast} from 'react-toastify';
 
 function Login() {
     let navigate = useNavigate();
-    const [token, setToken] = useLocalStorage('token')
+    const dispatch = useDispatch();
+    const [token, setToken] = useState('')
 
 const [userLogin, setUserLogin] = useState<UserLogin>({
     id:0,
@@ -28,6 +32,7 @@ function updatedModel(e: ChangeEvent<HTMLInputElement>){
 }
     useEffect(()=>{
         if (token != ""){
+            dispatch (addToken(token));
             navigate('/home')
         }
 
@@ -37,10 +42,30 @@ async function logar(e:ChangeEvent<HTMLFormElement>){
     e.preventDefault();
    try{
          await login('/usuario/logar', userLogin,setToken)
-        alert('Usuário logado com sucesso!')
+         {toast.success ("Usuário logado com sucesso!",{ 
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            theme: "colored",
+            progress: undefined,
+        });
+        
    } 
    catch(error){
-       alert('Dados incorretos!!')
+    {toast.error ("Dados incorretos!!",{ 
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+        progress: undefined,
+    });
+      
 
    }
 
